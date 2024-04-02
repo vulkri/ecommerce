@@ -18,6 +18,7 @@ flower = "*"
 djecrety = "*"
 debugpy = "*"
 djangorestframework-simplejwt = "*"
+python-dotenv = "*"
 
 [dev-packages]
 

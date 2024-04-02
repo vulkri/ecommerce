@@ -3,9 +3,15 @@ from django.conf import settings
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group, User
 from django.db import models, migrations, transaction
+from os import getenv as os_getenv
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 def apply_migration(apps, schema_editor):
+    if os_getenv('ENV') != 'dev':
+        return
     try:
         with transaction.atomic():
             Group = apps.get_model('auth', 'Group')

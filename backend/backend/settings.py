@@ -11,7 +11,10 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 import os
 from os import getenv as os_getenv
+from dotenv import load_dotenv
 from pathlib import Path
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,13 +24,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '3tdsz4)u40)ur!_dn6i=1m&@0#12t19e4n62@^syf)jtwbjij$'
+SECRET_KEY = '5wz=whqn04e*amb25!yy-x_1xyiry995$op16(0$e4wadbz#!b'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True if os_getenv("ENV") == "dev" else False
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'ecommerce.hamsterburrow.pl',]
-
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', ]
+if os_getenv('ALLOWED_HOSTS'):
+    ALLOWED_HOSTS.append(os_getenv('ALLOWED_HOSTS'))
 
 # Application definition
 
@@ -153,7 +157,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SPECTACULAR_SETTINGS = {
     'TITLE': 'eCommerce DEMO API',
     'DESCRIPTION': 'REST API DEMO',
-    'VERSION': '1.0.0',
+    'VERSION': '0.0.1',
     'SERVE_INCLUDE_SCHEMA': False,
     'COMPONENT_SPLIT_REQUEST': True,
 }
@@ -189,18 +193,18 @@ if IS_DOCKER:
     REDIS_PORT = 6379
 
 REDIS_DB_KEYS = {
-    "dev": 0,
-    "test": 1,
-    "prod": 2,
+    'dev': 0,
+    'test': 1,
+    'prod': 2,
 }
 
-REDIS_DB = REDIS_DB_KEYS.get('dev', 0)
+REDIS_DB = REDIS_DB_KEYS.get(os_getenv('ENV'))
 REDIS_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}"
 
 
 # Celery settings
 
-CELERY_BROKER_URL = f'redis://{REDIS_HOST}:{REDIS_PORT}'
+CELERY_BROKER_URL = REDIS_URL
 CELERY_ACCEPT_CONTENT = {'application/json'}
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
@@ -209,18 +213,17 @@ CELERY_TIMEZONE = 'UTC'
 CELERY_RESULT_EXTENDED = True
 
 # SMTP Settings
-# hardcoded mailtrap - DEMO
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_USE_TLS = False
-EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
-EMAIL_HOST_USER = '026c51964e8a7b'
-EMAIL_HOST_PASSWORD = '5aa3a8d5d3d532'
-EMAIL_PORT = '2525'
-EMAIL_DEFAULT_FROM = '<no-reply@enigma-demo.com>'
+EMAIL_USE_TLS = os_getenv('EMAIL_USE_TLS')
+EMAIL_HOST = os_getenv('EMAIL_HOST')
+EMAIL_HOST_USER = os_getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os_getenv('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = os_getenv('EMAIL_PORT')
+EMAIL_DEFAULT_FROM = os_getenv('EMAIL_DEFAULT_FROM')
 
 
-# Default passwords - DEMO
+# Default users - created for dev environment
 
 DEMO_SUPERUSER_PASS = "admin123" # username admin
 DEMO_MANAGER_PASS = "manager123" # username manager
