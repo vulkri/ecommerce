@@ -22,8 +22,6 @@ services:
   redis:
     container_name: "ecommerce-redis"
     image: redis:latest
-    user: $HOST_UID:$HOST_GID
-
 
   celery-worker: &celery-worker
     container_name: "ecommerce-celery-worker"
