@@ -17,6 +17,7 @@ django-celery-beat = "*"
 flower = "*"
 djecrety = "*"
 debugpy = "*"
+djangorestframework-simplejwt = "*"
 
 [dev-packages]
 
