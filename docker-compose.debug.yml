@@ -1,0 +1,6 @@
+services:
+  backend:
+    ports:
+      - "8000:8000"
+      - "5678:5678"
+    command: [ "/bin/sh", "/home/nonroot/deployment/scripts/backend/start-debug.sh" ]

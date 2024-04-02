@@ -1,0 +1,48 @@
+services:
+  backend:
+    container_name: "ecommerce-backend"
+    user: $HOST_UID:$HOST_GID
+    build:
+      context: .
+      dockerfile: deployment/Dockerfile
+      args:
+        UID: $HOST_UID
+        GID: $HOST_GID
+        APP_NAME: "ecommerce-demo"
+        APP_HOST: 0.0.0.0
+        APP_PORT: 8000
+
+    volumes:
+      - ./backend:/home/nonroot/app
+      - ./deployment/scripts:/home/nonroot/deployment/scripts
+    ports:
+      - "8000:8000"
+    command: [ "/bin/sh", "/home/nonroot/deployment/scripts/backend/start.sh" ]
+
+  redis:
+    container_name: "ecommerce-redis"
+    image: redis:latest
+    user: $HOST_UID:$HOST_GID
+
+
+  celery-worker: &celery-worker
+    container_name: "ecommerce-celery-worker"
+    user: $HOST_UID:$HOST_GID
+    build:
+      context: .
+      dockerfile: deployment/Dockerfile
+      args:
+        UID: $HOST_UID
+        GID: $HOST_GID
+    volumes:
+      - ./backend:/home/nonroot/app
+      - ./deployment/scripts:/home/nonroot/deployment/scripts
+    depends_on:
+      - redis
+      - backend
+    command: [ "/bin/sh", "/home/nonroot/deployment/scripts/celery/start-worker.sh" ]
+
+  celery-beat:
+    <<: *celery-worker
+    container_name: "ecommerce-celery-beat"
+    command: [ "/bin/sh", "/home/nonroot/deployment/scripts/celery/start-beat.sh" ]

@@ -1,0 +1,24 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+django = "5.0.1"
+djangorestframework = "*"
+markdown = "*"
+django-filter = "*"
+django-thumbnails = "*"
+drf-spectacular = "*"
+celery = "*"
+redis = "*"
+django-celery-results = "*"
+django-celery-beat = "*"
+flower = "*"
+djecrety = "*"
+debugpy = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"
