@@ -15,10 +15,10 @@ redis = "*"
 django-celery-results = "*"
 django-celery-beat = "*"
 flower = "*"
-djecrety = "*"
 debugpy = "*"
 djangorestframework-simplejwt = "*"
 python-dotenv = "*"
+psycopg2 = "*"
 
 [dev-packages]
 

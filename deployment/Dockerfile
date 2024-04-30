@@ -20,7 +20,6 @@ WORKDIR /home/nonroot/app
 
 COPY backend/requirements.txt ./requirements.txt
 COPY deployment/scripts /home/nonroot/deployment/scripts
-COPY backend/ ./
 
 RUN chown -R nonroot:nonroot /home/nonroot/app
 RUN chown -R nonroot:nonroot /home/nonroot/deployment/scripts
@@ -29,5 +28,7 @@ USER nonroot
 RUN --mount=type=cache,target=/home/nonroot/.cache/pip \
     pip install pip --upgrade \
     && pip install -r requirements.txt
+
+COPY backend/ ./
 
 RUN chmod -R +x /home/nonroot/deployment/scripts/*
