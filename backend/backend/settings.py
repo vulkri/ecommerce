@@ -30,8 +30,8 @@ SECRET_KEY = '5wz=whqn04e*amb25!yy-x_1xyiry995$op16(0$e4wadbz#!b'
 DEBUG = True if os_getenv("ENV") == "dev" else False
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', ]
-if os_getenv('ALLOWED_HOSTS'):
-    ALLOWED_HOSTS.append(os_getenv('ALLOWED_HOSTS'))
+if os_getenv('EXTERNAL_URL'):
+    ALLOWED_HOSTS.append(os_getenv('EXTERNAL_URL'))
 
 # Application definition
 

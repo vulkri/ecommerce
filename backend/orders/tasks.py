@@ -3,26 +3,31 @@ from smtplib import SMTPException
 import datetime
 from django.core.mail import BadHeaderError, send_mail
 from django.conf import settings
-from django.http import HttpResponse
 from django.db.models import Q
 
 
 from .models import Order
 
-
+# Order confirmation mail
 @shared_task(bind=True)
 def send_order_confirmation_mail(self, target_mail, created_at):
-    # may add the same mail exception handling as in send_remainder()
-    send_mail(
-        subject = 'Order confirmation',
-        message=f'Order created at: {created_at.strftime("%Y-%m-%d %H:%M")}',
-        from_email=settings.EMAIL_DEFAULT_FROM,
-        recipient_list=[target_mail],
-        fail_silently=False,
-    )
+    try:
+        send_mail(
+            subject = 'Order confirmation',
+            message=f'Order created at: {created_at.strftime("%Y-%m-%d %H:%M")}',
+            from_email=settings.EMAIL_DEFAULT_FROM,
+            recipient_list=[target_mail],
+            fail_silently=False,
+        )
+    except BadHeaderError:              # If mail's Subject is not properly formatted.
+        return 'Invalid header found.'
+    except SMTPException as e:          # It will catch other errors related to SMTP.
+        return f'There was an error sending an email.\n {e}'
+    except:                             # It will catch All other possible errors.
+        return 'Mail Sending Failed!'
 
 
-
+# Payment remainder mail
 @shared_task(bind=True)
 def send_payment_remainder_mail(self):
     # send remainder one day before payment_deadline 
@@ -35,6 +40,7 @@ def send_payment_remainder_mail(self):
         ) | 
         Q(remainder_force=True)
     )
+    # check if there's any mails to send
     c = 0
     if orders.count() == 0:
         return 'no emails to send'

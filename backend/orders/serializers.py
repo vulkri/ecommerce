@@ -1,11 +1,8 @@
 from rest_framework import serializers
-from rest_framework.fields import CurrentUserDefault
-from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiParameter, extend_schema_serializer, OpenApiExample
 
 from .models import Order, OrderData
 from .tasks import send_order_confirmation_mail
 
-from products.models import Product
 
 class OrderDataSerializer(serializers.ModelSerializer):
 

@@ -72,6 +72,7 @@ class ProductViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
          product = self.get_object()
+         # do not allow product deletion if it's already sold
          if product.orderdata_set.all().count() > 0:
               raise serializers.ValidationError({"error": "product already sold"})
          product.delete()

@@ -20,7 +20,7 @@ class CreateOrderAPIView(generics.CreateAPIView):
     permission_classes = [IsClient]
 
 
-# I'd rather store orders in elastic stack for easier data exploration and visualizations
+
 # extend product schema by better descriptions
 @extend_schema_view(
     get=extend_schema(
@@ -31,6 +31,7 @@ class CreateOrderAPIView(generics.CreateAPIView):
         ]
     )
 )
+# I'd rather store orders in elastic stack for easier data exploration and visualizations
 class TopSellersListAPIView(generics.ListAPIView):
     serializer_class = TopSellers
     permission_classes = [IsManager]
