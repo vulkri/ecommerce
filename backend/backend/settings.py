@@ -24,10 +24,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '5wz=whqn04e*amb25!yy-x_1xyiry995$op16(0$e4wadbz#!b'
+SECRET_KEY = 'ktgyaoe%))ty$0l*$x6*=hy%(1wwi9_a2mq(dtlgjzge6c!2&b'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True if os_getenv("ENV") == "dev" else False
+DEBUG = True if os_getenv('ENV') == 'dev' else False
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', ]
 if os_getenv('EXTERNAL_URL'):
@@ -102,8 +102,12 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os_getenv('POSTGRES_DB'),
+        'USER': os_getenv('POSTGRES_USER'),
+        'PASSWORD': os_getenv('POSTGRES_PASS'),
+        'HOST': os_getenv('POSTGRES_HOST'),
+        'PORT': os_getenv('POSTGRES_PORT'), 
     }
 }
 
@@ -184,12 +188,12 @@ THUMBNAILS = {
 
 # Redis settings
 
-REDIS_HOST = os_getenv("REDIS_HOST", "127.0.0.1")
-REDIS_PORT = os_getenv("REDIS_PORT", 6379)
+REDIS_HOST = os_getenv('REDIS_HOST', '127.0.0.1')
+REDIS_PORT = os_getenv('REDIS_PORT', 6379)
 
 IS_DOCKER = os_getenv('IN_A_DOCKER_CONTAINER', False)
 if IS_DOCKER:
-    REDIS_HOST = "redis"
+    REDIS_HOST = 'redis'
     REDIS_PORT = 6379
 
 REDIS_DB_KEYS = {
@@ -199,7 +203,7 @@ REDIS_DB_KEYS = {
 }
 
 REDIS_DB = REDIS_DB_KEYS.get(os_getenv('ENV'))
-REDIS_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}"
+REDIS_URL = f'redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}'
 
 
 # Celery settings
@@ -214,7 +218,7 @@ CELERY_RESULT_EXTENDED = True
 
 # SMTP Settings
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = os_getenv('EMAIL_USE_TLS')
 EMAIL_HOST = os_getenv('EMAIL_HOST')
 EMAIL_HOST_USER = os_getenv('EMAIL_HOST_USER')
@@ -225,6 +229,6 @@ EMAIL_DEFAULT_FROM = os_getenv('EMAIL_DEFAULT_FROM')
 
 # Default users - created for dev environment
 
-DEMO_SUPERUSER_PASS = "admin123" # username admin
-DEMO_MANAGER_PASS = "manager123" # username manager
-DEMO_CLIENT_PASS = "client123"   # username client
+DEMO_SUPERUSER_PASS = 'admin123' # username admin
+DEMO_MANAGER_PASS = 'manager123' # username manager
+DEMO_CLIENT_PASS = 'client123'   # username client

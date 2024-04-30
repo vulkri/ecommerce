@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from rest_framework import serializers
 
 from .models import Order, OrderData
@@ -42,7 +43,9 @@ class OrderSerializer(serializers.ModelSerializer):
     # creating OrderData related objects (product, price, quantity)
     def create(self, validated_data):
         order_items = validated_data.pop('order_data')
-        order = Order.objects.create(**validated_data)
+        # after updating to Django 5.1 we can use model generated field (see models.Order)
+        pd = datetime.now() + timedelta(days=5)
+        order = Order.objects.create(payment_deadline=pd, **validated_data)
         for item in order_items:
             OrderData.objects.create(order=order, product_price=item['product'].price, **item)
         send_order_confirmation_mail.delay(order.client.email, order.created_at)

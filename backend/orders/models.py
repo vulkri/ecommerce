@@ -1,4 +1,3 @@
-import datetime
 from django.db import models
 from django.db.models import F, Sum, Value
 from django.contrib.auth import get_user_model
@@ -10,11 +9,16 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     client = models.ForeignKey(User, on_delete=models.PROTECT)
     shipment_address = models.TextField() # text field for simplicity - i'd opt for django-address
+    """ 
+    Not working with Postgres as of Django 5.0.1, can be used with Django 5.1
+    
     payment_deadline = models.GeneratedField(
         expression=F('created_at') + datetime.timedelta(days=5),
         output_field=models.DateTimeField(),
         db_persist=True
     )
+    """
+    payment_deadline = models.DateTimeField()
     remainder_sent = models.BooleanField(default=False)
     remainder_force = models.BooleanField(default=False)
 
