@@ -19,6 +19,7 @@ debugpy = "*"
 djangorestframework-simplejwt = "*"
 python-dotenv = "*"
 psycopg2 = "*"
+django-pytest = "*"
 
 [dev-packages]
 
