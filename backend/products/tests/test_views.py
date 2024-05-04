@@ -176,11 +176,11 @@ class ProductViewSetTest(TestCase):
     @classmethod
     def setUp(cls):
         # Create test category
-        cls.category = Category.objects.create(name=f'Product test category')
+        cls.category = Category.objects.create(name='Product test category')
 
         # Create 16 test products
         number_of_products = 16
-        f = open('media/tests/circle-1000x1000.png', 'rb')
+        f = open('products/tests/images/circle-1000x1000.png', 'rb')
         for product_id in range(number_of_products):
             p = Product.objects.create(
                 name=f'Test product {product_id}',
@@ -291,7 +291,7 @@ class ProductViewSetTest(TestCase):
 
     # Non-safe methods tests - manager
     def test_product_create_allowed(self):
-        f = open('media/tests/circle-1000x1000.png', 'rb')
+        f = open('products/tests/images/circle-1000x1000.png', 'rb')
         data = {
             'name': 'manager product test',
             'description': 'product test',
@@ -309,7 +309,7 @@ class ProductViewSetTest(TestCase):
         self.assertEqual(response.data['name'], data['name'])
 
     def test_product_update_allowed(self):
-        f = open('media/tests/circle-1000x1000.png', 'rb')
+        f = open('products/tests/images/circle-1000x1000.png', 'rb')
         data = {
             'name': 'manager product update test',
             'description': 'product update test',
