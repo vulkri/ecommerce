@@ -8,14 +8,19 @@ This is a Django eCommerce API backend boilerplate powered by Postgresql, Redis,
 ## Features
 - REST API
 - User authentication using JWT
-- User registration (WIP)
 - Products/Categories/Orders CRUD
-- Thumbnail generation
+- Thumbnail auto-generation
 - Order confirmation emails
-- Full-text search - Elasticsearch (WIP)
-- Order statistics dashboard - Kibana (WIP)
 - Automatic tests - Django-pytest (products)
-- pgAdmin (default port: 15432)
+- pgAdmin
+
+---
+
+## To-do
+- User registration
+- Stripe integration
+- Full-text search - Elasticsearch
+- Order statistics dashboard - Kibana
 
 ---
 
