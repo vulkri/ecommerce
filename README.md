@@ -15,6 +15,7 @@ This is a Django eCommerce API backend boilerplate powered by Postgresql, Redis,
 - Full-text search - Elasticsearch (WIP)
 - Order statistics dashboard - Kibana (WIP)
 - Automatic tests - Django-pytest (products)
+- pgAdmin (default port: 15432)
 
 ---
 
@@ -63,7 +64,7 @@ Swagger API documentation is available at:
 ## Live demo
 Live demo backend available at:
 
-`https://ecommerce-demo.hamsterburrow.pl/api/schema/swagger-ui/`
+https://ecommerce-demo.hamsterburrow.pl/api/schema/swagger-ui/
 
 ---
 
