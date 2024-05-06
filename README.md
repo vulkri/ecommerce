@@ -22,6 +22,10 @@ This is a Django eCommerce API backend boilerplate powered by Postgresql, Redis,
 - **Manager:** Access to Products/Categories CRUD
 - **Administrator:** WIP
 
+**Demo/dev environment credentials:**
+- manager:manager123
+- client:client123
+
 ---
 
 ## Running using Docker 
@@ -49,6 +53,13 @@ Start backend in debug mode. Run command below to initialize tests.
 Swagger API documentation is available at:
 
 `{SEVER_ADDRESS}/api/schema/swagger-ui/`
+
+---
+
+## Live demo
+Live demo backend available at:
+
+`https://ecommerce-demo.hamsterburrow.pl/api/schema/swagger-ui/`
 
 ---
 
