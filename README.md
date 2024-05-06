@@ -27,28 +27,28 @@ This is a Django eCommerce API backend boilerplate powered by Postgresql, Redis,
 ## Running using Docker 
 Clone this repo. Copy/rename .env.example to .env and backend/.env.example to backend/.env, and modify them accordingly.  Run command below to start backend.
 
-'HOST_UID=$(id -u) HOST_GID=$(id -g) docker compose  -f docker-compose.yml up'
+`HOST_UID=$(id -u) HOST_GID=$(id -g) docker compose  -f docker-compose.yml up`
 
 ---
 
 ## Running using Docker - debug mode
 Clone this repo. Copy/rename .env.example to .env and backend/.env.example to backend/.env, and modify them accordingly ('ENV = \'dev'' in backend/.env).  Run command below to start in debug mode.
 
-'HOST_UID=$(id -u) HOST_GID=$(id -g) docker compose  -f docker-compose.yml -f docker-compose.debug.yml up'
+`HOST_UID=$(id -u) HOST_GID=$(id -g) docker compose  -f docker-compose.yml -f docker-compose.debug.yml up`
 
 ---
 
 ## Running tests
 Start backend in debug mode. Run command below to initialize tests.
 
-'docker compose run --rm backend python manage.py test'
+`docker compose run --rm backend python manage.py test`
 
 ---
 
 ## REST API Documentation
 Swagger API documentation is available at:
 
-'{SEVER_ADDRESS}/api/schema/swagger-ui/'
+`{SEVER_ADDRESS}/api/schema/swagger-ui/`
 
 ---
 
