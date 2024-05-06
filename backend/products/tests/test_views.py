@@ -1,5 +1,4 @@
 import shutil
-from urllib.parse import urlencode
 from django.test import override_settings, TestCase
 from django.test.client import MULTIPART_CONTENT, encode_multipart, BOUNDARY
 from django.urls import reverse
