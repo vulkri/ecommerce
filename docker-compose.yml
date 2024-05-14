@@ -69,9 +69,14 @@ services:
       - ./backend:/home/nonroot/app
       - ./deployment/scripts:/home/nonroot/deployment/scripts
     depends_on:
-      - redis
-      - backend
-      - db
+      backend:
+        condition: service_started
+      es01:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      db:
+        condition: service_started
     command: [ "/bin/sh", "/home/nonroot/deployment/scripts/celery/start-worker.sh" ]
 
   celery-beat:
@@ -137,7 +142,7 @@ services:
       - certs:/usr/share/elasticsearch/config/certs
       - esdata01:/usr/share/elasticsearch/data
     ports:
-      - ${ES_PORT}:9200
+      - 9200:9200
     environment:
       - node.name=es01
       - discovery.type=single-node

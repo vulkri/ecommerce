@@ -20,6 +20,7 @@ djangorestframework-simplejwt = "*"
 python-dotenv = "*"
 psycopg2 = "*"
 django-pytest = "*"
+django-elasticsearch-dsl = "*"
 
 [dev-packages]
 
