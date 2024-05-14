@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'django_celery_beat',
     'django_celery_results',
+    'django_elasticsearch_dsl',
     'products',
     'orders',
     'users',
@@ -209,7 +210,7 @@ THUMBNAILS = {
 }
 
 
-# Redis settings
+# Redis settings - need refactor as I opted for only-docker builds
 
 REDIS_HOST = os_getenv('REDIS_HOST', '127.0.0.1')
 REDIS_PORT = os_getenv('REDIS_PORT', 6379)
@@ -238,6 +239,15 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_TIMEZONE = 'UTC'
 CELERY_RESULT_EXTENDED = True
+
+# Elasticsearch settings
+ELASTICSEARCH_DSL={
+    'default': {
+        'hosts': 'https://es01:9200',
+        'http_auth': ('elastic', os_getenv('ELASTIC_PASSWORD')),
+        'ca_certs': 'ca.crt',
+    }
+}
 
 # SMTP Settings
 

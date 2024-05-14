@@ -1,13 +1,16 @@
-from rest_framework import filters, parsers, permissions,serializers, viewsets
+from rest_framework import filters, permissions, serializers, viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiParameter
 from drf_spectacular.types import OpenApiTypes
 from rest_framework.response import Response
-from rest_framework.decorators import action, permission_classes
-from .models import Category, Product
-from .serializers import CategorySerializer, ProductSerializer
+from elasticsearch_dsl import Q
 
 from users.permissions import IsManager
+
+from .models import Category, Product
+from .serializers import CategorySerializer, ProductSerializer
+from .documents import CategoryDocument, ProductDocument
+
 
 
 # extend category schema by better descriptions
@@ -23,9 +26,8 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    filter_backends = [filters.OrderingFilter, filters.SearchFilter]
+    filter_backends = [filters.OrderingFilter]
     ordering_fields = ['name']
-    search_fields = ['name']
     
     # require Manager permissions for non-safe methods
     def get_permissions(self):
@@ -33,6 +35,22 @@ class CategoryViewSet(viewsets.ModelViewSet):
             if self.request.method not in permissions.SAFE_METHODS:
                 self.permission_classes = [IsManager]
             return super(CategoryViewSet, self).get_permissions()
+    
+    # override queryset - es fulltext search
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if 'search' in self.request.query_params.keys():
+            query =  self.request.query_params['search']
+            q = Q(
+                'multi_match',
+                query=query,
+                fields=['name'],
+                fuzziness='AUTO'
+            )
+            # return 30 items at max
+            search = CategoryDocument.search().query(q)[:30]
+            qs = search.to_queryset()
+        return qs
 
 
 
@@ -43,8 +61,8 @@ class CategoryViewSet(viewsets.ModelViewSet):
             OpenApiParameter(name='category', description='Filter by: category_id.', type=int),
             OpenApiParameter(name='price__gte', description='Price greater or equal.', type=float),
             OpenApiParameter(name='price__lte', description='Price less or equal.', type=float),
-            OpenApiParameter(name='ordering', description='Order by: category__name, name, price (reverse: "-").'),
-            OpenApiParameter(name='search', description='Search in: category__name, description, name.'),
+            OpenApiParameter(name='ordering', description='Order by: category.name, name, price (reverse: "-").'),
+            OpenApiParameter(name='search', description='Search in: name, category.name, description.'),
             OpenApiParameter(name='photo', description='Photo file', type=OpenApiTypes.BYTE),
         ]
     )
@@ -60,7 +78,6 @@ class ProductViewSet(viewsets.ModelViewSet):
          'price':['gte', 'lte'],
     }
     ordering_fields = ['category__name', 'name', 'price']
-    search_fields = ['category__name', 'description', 'name']
 
     # require Manager permissions for non-safe methods
     def get_permissions(self):
@@ -68,7 +85,26 @@ class ProductViewSet(viewsets.ModelViewSet):
             if self.request.method not in permissions.SAFE_METHODS:
                 self.permission_classes = [IsManager]
             return super(ProductViewSet, self).get_permissions()
-
+    
+    # override queryset - es fulltext search
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if 'search' in self.request.query_params.keys():
+            query =  self.request.query_params['search']
+            q = Q(
+                'multi_match',
+                query=query,
+                fields=[
+                     'name',
+                     'description',
+                     'category.name'
+                ],
+                fuzziness='AUTO'
+            )
+            # return 30 items at max
+            search = ProductDocument.search().query(q)[:30]
+            qs = search.to_queryset()
+        return qs
 
     def destroy(self, request, *args, **kwargs):
          product = self.get_object()

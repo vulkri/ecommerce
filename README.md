@@ -9,6 +9,7 @@ This is a Django eCommerce API backend boilerplate powered by Postgresql, Redis,
 - REST API
 - User authentication using JWT
 - Products/Categories/Orders CRUD
+- Full-text search - Elasticsearch
 - Thumbnail auto-generation
 - Order confirmation emails
 - Automatic tests - Django-pytest (products)
@@ -19,7 +20,6 @@ This is a Django eCommerce API backend boilerplate powered by Postgresql, Redis,
 ## To-do
 - User registration
 - Stripe integration
-- Full-text search - Elasticsearch
 - Order statistics dashboard - Kibana
 
 ---
