@@ -29,6 +29,4 @@ RUN --mount=type=cache,target=/home/nonroot/.cache/pip \
     pip install pip --upgrade \
     && pip install -r requirements.txt
 
-COPY backend/ ./
-
 RUN chmod -R +x /home/nonroot/deployment/scripts/*

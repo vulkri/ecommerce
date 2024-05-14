@@ -9,6 +9,14 @@ media
 # Backup files # 
 *.bak 
 
+# ES cert files
+backend/ca*
+certs/ca
+certs/es*
+ca.zip
+certs.zip
+instances.yml
+
 # If you are using PyCharm # 
 # User-specific stuff
 .idea/**/workspace.xml

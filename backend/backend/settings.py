@@ -243,7 +243,8 @@ CELERY_RESULT_EXTENDED = True
 ELASTICSEARCH_DSL={
     'default': {
         'hosts': 'https://es01:9200',
-        'http_auth': ('elastic', os_getenv('ELASTIC_PASSWORD'))
+        'http_auth': ('elastic', os_getenv('ELASTIC_PASSWORD')),
+        'ca_certs': 'ca.crt',
     }
 }
 
