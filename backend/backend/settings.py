@@ -243,7 +243,7 @@ CELERY_RESULT_EXTENDED = True
 # Elasticsearch settings
 ELASTICSEARCH_DSL={
     'default': {
-        'hosts': 'https://es01:'+ os_getenv('ELASTIC_PORT'),
+        'hosts': 'https://es01:9200',
         'http_auth': ('elastic', os_getenv('ELASTIC_PASSWORD')),
         'ca_certs': '../certs/ca/ca_django.crt',
     }
