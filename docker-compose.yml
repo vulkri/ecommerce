@@ -8,14 +8,11 @@ services:
       args:
         UID: $HOST_UID
         GID: $HOST_GID
-        APP_NAME: "ecommerce-demo"
-        APP_HOST: 0.0.0.0
-        APP_PORT: 8000
 
     volumes:
       - ./backend:/home/nonroot/app
       - ./deployment/scripts:/home/nonroot/deployment/scripts
-      - ./certs/ca/ca.crt:/home/nonroot/app/ca.crt
+      - certs:/home/nonroot/certs
     ports:
       - "8000:8000"
     depends_on:
@@ -88,7 +85,7 @@ services:
   setup:
     image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
     volumes:
-      - ./certs:/usr/share/elasticsearch/config/certs
+      - certs:/usr/share/elasticsearch/config/certs
     user: "0"
     command: >
       bash -c '
@@ -119,13 +116,16 @@ services:
           unzip config/certs/certs.zip -d config/certs;
         fi;
         echo "Setting file permissions"
-        chown -R $HOST_UID:$HOST_GID config/certs;
+        chown -R root:root config/certs;
         find . -type d -exec chmod 750 \{\} \;;
         find . -type f -exec chmod 640 \{\} \;;
+        cp config/certs/ca/ca.crt config/certs/ca/ca_django.crt
+        find config/certs -type d -exec chmod 755 \{\} \;;
+        chown ${HOST_UID}:${HOST_GID} config/certs/ca/ca_django.crt
         echo "Waiting for Elasticsearch availability";
-        until curl -s --cacert config/certs/ca/ca.crt https://es01:9200 | grep -q "missing authentication credentials"; do sleep 30; done;
+        until curl -s --cacert config/certs/ca/ca.crt https://es01:${ELASTIC_PORT} | grep -q "missing authentication credentials"; do sleep 30; done;
         echo "Setting kibana_system password";
-        until curl -s -X POST --cacert config/certs/ca/ca.crt -u "elastic:${ELASTIC_PASSWORD}" -H "Content-Type: application/json" https://es01:9200/_security/user/kibana_system/_password -d "{\"password\":\"${KIBANA_PASSWORD}\"}" | grep -q "^{}"; do sleep 10; done;
+        until curl -s -X POST --cacert config/certs/ca/ca.crt -u "elastic:${ELASTIC_PASSWORD}" -H "Content-Type: application/json" https://es01:${ELASTIC_PORT}/_security/user/kibana_system/_password -d "{\"password\":\"${KIBANA_PASSWORD}\"}" | grep -q "^{}"; do sleep 10; done;
         echo "All done!";
       '
     healthcheck:
@@ -140,10 +140,10 @@ services:
         condition: service_healthy
     image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
     volumes:
-      - ./certs:/usr/share/elasticsearch/config/certs
+      - certs:/usr/share/elasticsearch/config/certs
       - esdata01:/usr/share/elasticsearch/data
     ports:
-      - 9200:9200
+      - ${ELASTIC_PORT}:9200
     environment:
       - node.name=es01
       - discovery.type=single-node
@@ -184,13 +184,13 @@ services:
         condition: service_healthy
     image: docker.elastic.co/kibana/kibana:${STACK_VERSION}
     volumes:
-      - ./certs:/usr/share/kibana/config/certs
+      - certs:/usr/share/kibana/config/certs
       - kibanadata:/usr/share/kibana/data
     ports:
       - ${KIBANA_PORT}:5601
     environment:
       - SERVERNAME=kibana
-      - ELASTICSEARCH_HOSTS=https://es01:9200
+      - ELASTICSEARCH_HOSTS=https://es01:${ELASTIC_PORT}
       - ELASTICSEARCH_USERNAME=kibana_system
       - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
       - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=config/certs/ca/ca.crt
@@ -208,6 +208,8 @@ services:
 volumes:
   pgdata:
   pgadmin:
+  certs:
+    driver: local
   esdata01:
     driver: local
   kibanadata:
