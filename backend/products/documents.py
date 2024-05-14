@@ -17,10 +17,11 @@ class CategoryDocument(Document):
     class Django:
         model = Category
         fields = [
+            'id',
             'name'
         ]
 
-
+# TODO: update Product.Category.name on Category.name change
 @registry.register_document
 class ProductDocument(Document):
     category = fields.ObjectField(properties={
@@ -37,6 +38,7 @@ class ProductDocument(Document):
     class Django:
         model = Product
         fields = [
+            'id',
             'name',
             'description'
         ]
