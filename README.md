@@ -54,7 +54,7 @@ HOST_UID=$(id -u) HOST_GID=$(id -g) docker compose  -f docker-compose.yml -f doc
 ## Running tests
 Start backend in debug mode. Run command below to initialize tests.
 ```
-docker compose run --rm backend python manage.py test
+HOST_UID=$(id -u) HOST_GID=$(id -g) docker compose run --rm backend python manage.py test
 ```
 
 ---
