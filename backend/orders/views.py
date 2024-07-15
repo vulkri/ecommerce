@@ -15,6 +15,13 @@ from products.models import Product
 from users.permissions import IsClient, IsManager
 
 class CreateOrderAPIView(generics.CreateAPIView):
+    """
+    Allows clients to create new orders.
+    
+    This API view handles the creation of new orders by clients. 
+    It uses the `OrderSerializer` to validate and save the order data. 
+    Only clients are allowed to access this view.
+    """
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes = [IsClient]

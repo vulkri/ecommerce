@@ -23,7 +23,26 @@ from .documents import CategoryDocument, ProductDocument
     )
 )
 class CategoryViewSet(viewsets.ModelViewSet):
-
+    """
+    Viewset for managing category resources.
+    
+    This viewset provides CRUD operations for the Category model, with additional ordering and search capabilities.
+    
+    Ordering:
+    - `ordering`: Order categories by `name` (in ascending or descending order).
+    
+    Searching:
+    - `search`: Search for categories by name using full-text search.
+    
+    Permissions:
+    - `IsManager` permission is required for non-safe HTTP methods (POST, PUT, PATCH, DELETE).
+    - `AllowAny` permission is used for safe HTTP methods (GET, HEAD, OPTIONS).
+    
+    Overridden methods:
+    - `get_permissions()`: Dynamically sets the permission classes based on the HTTP method.
+    - `get_queryset()`: Applies full-text search on the category data if the `search` query parameter is provided.
+    """
+        
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     filter_backends = [filters.OrderingFilter]
@@ -67,8 +86,32 @@ class CategoryViewSet(viewsets.ModelViewSet):
         ]
     )
 )
-
 class ProductViewSet(viewsets.ModelViewSet):
+    """
+    Viewset for managing product resources.
+
+    This viewset provides CRUD operations for the Product model, with additional filtering and search capabilities.
+
+    Filtering:
+    - `category`: Filter products by category ID.
+    - `price__gte`: Filter products with price greater than or equal to the specified value.
+    - `price__lte`: Filter products with price less than or equal to the specified value.
+
+    Ordering:
+    - `ordering`: Order products by `category.name`, `name`, or `price` (in ascending or descending order).
+
+    Searching:
+    - `search`: Search for products by name, category name, or description.
+
+    Permissions:
+    - `IsManager` permission is required for non-safe HTTP methods (POST, PUT, PATCH, DELETE).
+    - `AllowAny` permission is used for safe HTTP methods (GET, HEAD, OPTIONS).
+
+    Overridden methods:
+    - `get_permissions()`: Dynamically sets the permission classes based on the HTTP method.
+    - `get_queryset()`: Applies full-text search on the product data if the `search` query parameter is provided.
+    - `destroy()`: Prevents deletion of a product that has already been sold.
+    """
 
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
@@ -107,9 +150,10 @@ class ProductViewSet(viewsets.ModelViewSet):
         return qs
 
     def destroy(self, request, *args, **kwargs):
-         product = self.get_object()
-         # do not allow product deletion if it's already sold
-         if product.orderdata_set.all().count() > 0:
-              raise serializers.ValidationError({"error": "product already sold"})
-         product.delete()
-         return Response()
+        product = self.get_object()
+        # do not allow product deletion if it's already been sold
+        if product.orderdata_set.all().count() > 0:
+            raise serializers.ValidationError({"error": "product already sold"})
+        product.delete()
+        return Response()
+    
