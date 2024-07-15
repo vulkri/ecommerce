@@ -1,0 +1,7 @@
+services:
+  setup:
+    volumes:
+      - certs-test:/usr/share/elasticsearch/config/certs
+
+volumes:
+  certs-test:
