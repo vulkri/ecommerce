@@ -5,7 +5,7 @@ export HOST_UID
 export HOST_GID
 
 start:
-	docker compose  -f docker-compose.yml up
+	docker compose  -f docker-compose.yml up -d
 
 start-dev:
 	docker compose  -f docker-compose.yml -f docker-compose.debug.yml up
