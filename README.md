@@ -69,7 +69,7 @@ Swagger API documentation is available at:
 ## Live demo
 Live demo backend available at:
 
-https://ecommerce-demo.hamsterburrow.pl/api/schema/swagger-ui/
+https://ecommerce-demo.hamsterburrow.eu/api/schema/swagger-ui/
 
 ---
 
